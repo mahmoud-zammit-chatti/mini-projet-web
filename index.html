@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f4ef">
+  <meta name="description" content="Un quiz de culture générale pour tester ses connaissances en cinq questions.">
+  <title>Le petit quiz — Culture générale</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Aller au contenu</a>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Le petit quiz, accueil">
+      <span class="brand-mark" aria-hidden="true">?</span>
+      <span>le petit quiz</span>
+    </a>
+    <span class="header-note"><span class="status-dot" aria-hidden="true"></span> Une pause pour les curieux</span>
+  </header>
+
+  <main id="main" class="page-shell">
+    <section class="quiz-card" aria-labelledby="page-title">
+      <div class="card-topline"><span class="eyebrow">CULTURE GÉNÉRALE</span><span class="edition">N° 01 <span aria-hidden="true">✳</span></span></div>
+
+      <section class="screen welcome-screen" id="welcome-screen" aria-labelledby="page-title">
+        <div class="welcome-copy">
+          <p class="kicker">Prêt·e à jouer ?</p>
+          <h1 id="page-title">Un peu de<br><span>curiosité</span><br>ne fait jamais de mal.</h1>
+          <p class="intro">Cinq questions, quelques secondes de réflexion et un score à la clé. À toi de jouer !</p>
+          <ul class="quiz-facts" aria-label="À propos du quiz">
+            <li><span class="fact-icon" aria-hidden="true">◷</span> 2 minutes</li>
+            <li><span class="fact-icon" aria-hidden="true">✳</span> 5 questions</li>
+            <li><span class="fact-icon" aria-hidden="true">↗</span> 100 % fun</li>
+          </ul>
+          <button class="button button-primary start-button" id="start-button" type="button">Commencer le quiz <span aria-hidden="true">→</span></button>
+          <p class="helper-text">Pas de pression, juste pour le plaisir.</p>
+        </div>
+        <div class="welcome-art" aria-hidden="true">
+          <div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div>
+          <span class="spark spark-one">✳</span><span class="spark spark-two">✦</span><span class="spark spark-three">·</span>
+          <div class="art-note note-top">un instant<br>pour soi</div>
+          <div class="question-mark">?</div>
+          <div class="art-note note-bottom"><span>✳</span> esprit en éveil</div>
+          <div class="art-sticker">CURIOSITÉ<br><b>ACTIVÉE</b></div>
+        </div>
+      </section>
+
+      <section class="screen quiz-screen" id="quiz-screen" aria-labelledby="question-title" hidden>
+        <div class="quiz-heading">
+          <div><p class="kicker">À toi de jouer</p><h1 id="question-title" tabindex="-1">Question 1</h1></div>
+          <p class="score-pill" aria-live="polite"><span aria-hidden="true">✳</span> <span id="score-display">0</span> point<span id="score-plural">s</span></p>
+        </div>
+        <div class="progress-meta"><span id="progress-label">Question 1 sur 5</span><span id="progress-percent">20 %</span></div>
+        <div class="progress-track" role="progressbar" aria-label="Progression du quiz" aria-valuemin="0" aria-valuemax="5" aria-valuenow="1" id="progress-bar"><span id="progress-fill"></span></div>
+        <div class="question-area">
+          <p class="question-category" id="question-category">GÉOGRAPHIE</p>
+          <h2 id="question-text">Quel est le plus grand océan de la Terre ?</h2>
+          <div class="answer-list" id="answer-list" role="group" aria-labelledby="question-text"></div>
+          <p class="feedback" id="feedback" aria-live="polite" aria-atomic="true"></p>
+          <button class="button button-primary next-button" id="next-button" type="button" hidden>Question suivante <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+
+      <section class="screen result-screen" id="result-screen" aria-labelledby="result-title" hidden>
+        <div class="result-confetti" aria-hidden="true">✳</div>
+        <p class="kicker">Le verdict est tombé</p>
+        <h1 id="result-title">Bien joué !</h1>
+        <p class="result-intro" id="result-message">Tu as terminé le quiz.</p>
+        <div class="result-score"><span id="final-score">0</span><span class="score-divider">/</span><span class="total-score">5</span><span class="score-caption">BONNES RÉPONSES</span></div>
+        <p class="result-detail" id="result-detail">La curiosité te va bien.</p>
+        <button class="button button-primary" id="restart-button" type="button">Rejouer <span aria-hidden="true">↻</span></button>
+      </section>
+      <footer class="card-footer"><span>FAIT AVEC <span class="footer-heart" aria-label="amour">♥</span> ET CURIOSITÉ</span><span>À TON RYTHME <span aria-hidden="true">↗</span></span></footer>
+    </section>
+    <p class="outside-note">Une petite parenthèse dans ta journée <span aria-hidden="true">✳</span></p>
+  </main>
+</body>
+</html>
