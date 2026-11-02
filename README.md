@@ -29,11 +29,3 @@ Le quiz mélange des questions à choix multiple et des questions **vrai/faux**.
 - Barre de progression, rejouabilité et leaderboard persistant.
 - Mise en page responsive, HTML sémantique, focus clavier visible et prise en charge de la réduction des animations.
 
-## Contributions
-
-Les noms des contributeurs n’étant pas indiqués dans les sources du projet, ils sont laissés comme placeholders :
-
-- **[Nom du/de la contributeur·rice 1]** — structure HTML et accessibilité.
-- **[Nom du/de la contributeur·rice 2]** — styles responsive et interface visuelle.
-- **[Nom du/de la contributeur·rice 3]** — logique du quiz, timer et scoring.
-- **[Nom du/de la contributeur·rice 4]** — questions vrai/faux et leaderboard local.
