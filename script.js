@@ -378,6 +378,38 @@ const questionBank = [
     answers: ["La Coupe de feu", "L’Ordre du Phénix", "À l’école des sorciers", "Le Prisonnier d’Azkaban"],
     correct: 2,
     fact: "Le premier tome, Harry Potter à l’école des sorciers, a été publié en 1997."
+  },
+  {
+    type: "true-false",
+    category: "SCIENCES",
+    text: "La Terre tourne autour du Soleil.",
+    answers: ["Vrai", "Faux"],
+    correct: 0,
+    fact: "La Terre effectue une révolution autour du Soleil en environ 365 jours."
+  },
+  {
+    type: "true-false",
+    category: "NATURE",
+    text: "Les dauphins sont des poissons.",
+    answers: ["Vrai", "Faux"],
+    correct: 1,
+    fact: "Les dauphins sont des mammifères : ils respirent de l’air et allaitent leurs petits."
+  },
+  {
+    type: "true-false",
+    category: "HISTOIRE",
+    text: "La Révolution française a commencé en 1789.",
+    answers: ["Vrai", "Faux"],
+    correct: 0,
+    fact: "La prise de la Bastille, le 14 juillet 1789, est un événement majeur de la Révolution française."
+  },
+  {
+    type: "true-false",
+    category: "GÉOGRAPHIE",
+    text: "Le Nil se trouve en Amérique du Sud.",
+    answers: ["Vrai", "Faux"],
+    correct: 1,
+    fact: "Le Nil coule en Afrique et se jette dans la mer Méditerranée."
   }
 ];
 
@@ -417,6 +449,7 @@ const restartButton = document.querySelector("#restart-button");
 const nextButton = document.querySelector("#next-button");
 const questionTitle = document.querySelector("#question-title");
 const questionCategory = document.querySelector("#question-category");
+const questionType = document.querySelector("#question-type");
 const questionText = document.querySelector("#question-text");
 const answerList = document.querySelector("#answer-list");
 const feedback = document.querySelector("#feedback");
@@ -429,6 +462,11 @@ const progressFill = document.querySelector("#progress-fill");
 const timerValue = document.querySelector("#timer-value");
 const timerBar = document.querySelector("#timer-bar");
 const timerFill = document.querySelector("#timer-fill");
+const leaderboardList = document.querySelector("#leaderboard-list");
+const leaderboardStatus = document.querySelector("#leaderboard-status");
+
+const LEADERBOARD_STORAGE_KEY = "le-petit-quiz-best-scores";
+const LEADERBOARD_LIMIT = 5;
 
 let currentQuestion = 0;
 let score = 0;
@@ -446,6 +484,80 @@ function showScreen(screen) {
 function updateScore() {
   scoreDisplay.textContent = String(score);
   scorePlural.textContent = score === 1 ? "" : "s";
+}
+
+function getStorage() {
+  try {
+    return window.localStorage;
+  } catch {
+    return null;
+  }
+}
+
+function readLeaderboard() {
+  const storage = getStorage();
+  if (!storage) return [];
+  try {
+    const savedScores = JSON.parse(storage.getItem(LEADERBOARD_STORAGE_KEY) || "[]");
+    if (!Array.isArray(savedScores)) return [];
+    return savedScores
+      .filter((entry) => entry && Number.isFinite(entry.score) && Number.isFinite(entry.correctAnswers)
+        && Number.isFinite(entry.totalQuestions) && Number.isFinite(entry.maxScore))
+      .map((entry) => ({
+        score: Math.max(0, Math.round(entry.score)),
+        correctAnswers: Math.max(0, Math.round(entry.correctAnswers)),
+        totalQuestions: Math.max(0, Math.round(entry.totalQuestions)),
+        maxScore: Math.max(0, Math.round(entry.maxScore)),
+        date: typeof entry.date === "string" ? entry.date : ""
+      }))
+      .sort((first, second) => second.score - first.score)
+      .slice(0, LEADERBOARD_LIMIT);
+  } catch {
+    return [];
+  }
+}
+
+function renderLeaderboard(scores = readLeaderboard()) {
+  leaderboardList.replaceChildren();
+  if (scores.length === 0) {
+    leaderboardStatus.textContent = "Aucun score enregistré pour le moment.";
+    return;
+  }
+  leaderboardStatus.textContent = "Les meilleurs scores sont conservés sur cet appareil.";
+  scores.forEach((entry) => {
+    const item = document.createElement("li");
+    item.innerHTML = `<span><strong>${entry.score} points</strong><small>${entry.correctAnswers}/${entry.totalQuestions} bonnes réponses</small></span><span>${entry.maxScore} max.</span>`;
+    leaderboardList.append(item);
+  });
+}
+
+function saveBestScore(detail) {
+  if (!detail || typeof detail !== "object") return;
+  const values = [detail.score, detail.correctAnswers, detail.totalQuestions, detail.maxScore];
+  if (values.some((value) => !Number.isFinite(value))) return;
+  const entry = {
+    score: Math.max(0, Math.round(detail.score)),
+    correctAnswers: Math.max(0, Math.round(detail.correctAnswers)),
+    totalQuestions: Math.max(0, Math.round(detail.totalQuestions)),
+    maxScore: Math.max(0, Math.round(detail.maxScore)),
+    date: new Date().toISOString()
+  };
+  const scores = [...readLeaderboard(), entry]
+    .sort((first, second) => second.score - first.score)
+    .slice(0, LEADERBOARD_LIMIT);
+  const storage = getStorage();
+  let storageError = false;
+  if (storage) {
+    try {
+      storage.setItem(LEADERBOARD_STORAGE_KEY, JSON.stringify(scores));
+    } catch {
+      storageError = true;
+    }
+  }
+  renderLeaderboard(scores);
+  if (storageError || !storage) {
+    leaderboardStatus.textContent = "Score terminé, mais impossible de le sauvegarder sur cet appareil.";
+  }
 }
 
 function stopTimer() {
@@ -483,6 +595,7 @@ function renderQuestion() {
   answered = false;
   questionTitle.textContent = `Question ${questionNumber}`;
   questionCategory.textContent = question.category;
+  questionType.textContent = question.type === "true-false" ? "VRAI / FAUX" : "CHOIX MULTIPLE";
   questionText.textContent = question.text;
   progressLabel.textContent = `Question ${questionNumber} sur ${roundQuestions.length}`;
   progressPercent.textContent = `${Math.round((questionNumber / roundQuestions.length) * 100)} %`;
@@ -603,3 +716,5 @@ nextButton.addEventListener("click", () => {
 });
 
 window.addEventListener("pagehide", stopTimer);
+window.addEventListener("quiz:complete", (event) => saveBestScore(event.detail));
+renderLeaderboard();

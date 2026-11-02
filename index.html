@@ -62,7 +62,7 @@
         </div>
         <div class="timer-track" role="progressbar" aria-label="Temps restant pour répondre" aria-valuemin="0" aria-valuemax="20" aria-valuenow="20" id="timer-bar"><span id="timer-fill"></span></div>
         <div class="question-area">
-          <p class="question-category" id="question-category">GÉOGRAPHIE</p>
+        <div class="question-meta"><p class="question-category" id="question-category">GÉOGRAPHIE</p><p class="question-type" id="question-type">CHOIX MULTIPLE</p></div>
           <h2 id="question-text">Quel est le plus grand océan de la Terre ?</h2>
           <div class="answer-list" id="answer-list" role="group" aria-labelledby="question-text"></div>
           <p class="feedback" id="feedback" aria-live="polite" aria-atomic="true"></p>
@@ -78,6 +78,11 @@
         <div class="result-score"><span id="final-score">0</span><span class="score-divider">/</span><span class="total-score">500</span><span class="score-caption">POINTS</span></div>
         <p class="result-detail" id="result-detail">La curiosité te va bien.</p>
         <button class="button button-primary" id="restart-button" type="button">Rejouer <span aria-hidden="true">↻</span></button>
+        <section class="leaderboard" aria-labelledby="leaderboard-title">
+          <h2 id="leaderboard-title">Meilleurs scores</h2>
+          <p class="leaderboard-status" id="leaderboard-status" aria-live="polite"></p>
+          <ol class="leaderboard-list" id="leaderboard-list"></ol>
+        </section>
       </section>
       <footer class="card-footer"><span>FAIT AVEC <span class="footer-heart" aria-label="amour">♥</span> ET CURIOSITÉ</span><span>À TON RYTHME <span aria-hidden="true">↗</span></span></footer>
     </section>

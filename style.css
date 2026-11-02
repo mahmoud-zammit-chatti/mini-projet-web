@@ -75,7 +75,7 @@ h1, h2 { font-family: Manrope, sans-serif; }
 .timer-track span.is-urgent { background: #c75b4d; }
 @keyframes timer-pulse { to { opacity: .55; } }
 .question-area { max-width: 660px; margin: 35px auto 0; }
-.question-category { margin-bottom: 8px; color: #8a8c82; font-size: 9px; font-weight: 700; letter-spacing: 1.3px; }
+.question-meta { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin-bottom: 8px; }.question-category, .question-type { margin: 0; color: #8a8c82; font-size: 9px; font-weight: 700; letter-spacing: 1.3px; }.question-type { color: var(--green); }
 .question-area h2 { margin-bottom: 20px; font-size: clamp(20px, 2.8vw, 26px); line-height: 1.35; letter-spacing: -.7px; }
 .answer-list { display: grid; gap: 9px; }
 .answer-button { display: flex; align-items: center; width: 100%; min-height: 48px; padding: 8px 13px; border: 1px solid #e8e9e2; border-radius: 6px; background: #fff; color: #444840; text-align: left; cursor: pointer; font-size: 12px; transition: border-color .16s ease, background .16s ease, transform .16s ease; }
@@ -93,6 +93,7 @@ h1, h2 { font-family: Manrope, sans-serif; }
 .score-divider { color: #b7b9b0; font-size: 35px; font-weight: 400; }.total-score { color: #85887f; font-size: 33px; font-weight: 600; }
 .score-caption { position: absolute; right: 50%; bottom: -14px; width: 130px; transform: translateX(50%); color: #999b92; font-family: "DM Sans", sans-serif; font-size: 8px; font-weight: 700; letter-spacing: 1.1px; }
 .result-detail { margin: 29px 0 17px; color: #696d64; font-size: 12px; }
+.leaderboard { width: min(100%, 390px); margin-top: 24px; padding-top: 17px; border-top: 1px solid var(--line); text-align: left; }.leaderboard h2 { margin: 0 0 4px; font-size: 16px; letter-spacing: -.3px; }.leaderboard-status { min-height: 16px; margin: 0 0 8px; color: var(--muted); font-size: 10px; }.leaderboard-list { display: grid; gap: 5px; margin: 0; padding-left: 24px; color: var(--green); font-size: 11px; }.leaderboard-list li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0 6px 4px; border-bottom: 1px solid #f0f0eb; }.leaderboard-list li > span:last-child { color: var(--muted); font-size: 10px; }.leaderboard-list strong, .leaderboard-list small { display: block; }.leaderboard-list small { margin-top: 2px; color: var(--muted); font-size: 10px; font-weight: 400; }
 @media (max-width: 700px) {
   .site-header { width: calc(100% - 36px); height: 68px; }.header-note { font-size: 10px; }
   .page-shell { width: calc(100% - 28px); margin-top: 12px; }
