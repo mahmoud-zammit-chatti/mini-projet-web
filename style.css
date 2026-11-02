@@ -79,13 +79,12 @@ h1, h2 { font-family: Manrope, sans-serif; }
 .feedback { min-height: 23px; margin: 12px 0 7px; color: var(--green); font-size: 11px; font-weight: 600; }.feedback.is-wrong { color: var(--red); }
 .next-button { min-height: 40px; }
 .result-screen { display: flex; min-height: 505px; flex-direction: column; align-items: center; justify-content: center; padding: 28px 0 38px; text-align: center; }
-.result-confetti { margin-bottom: 9px; color: var(--orange); font-size: 30px; animation: twinkle 1.8s ease-in-out infinite; }
+.result-confetti { margin-bottom: 9px; color: var(--orange); font-size: 30px; }
 .result-screen .kicker { margin-bottom: 7px; }.result-screen h1 { margin: 0; font-size: 39px; letter-spacing: -1.8px; }.result-intro { margin: 7px 0 19px; color: var(--muted); font-size: 12px; }
 .result-score { position: relative; display: flex; align-items: baseline; gap: 7px; color: var(--green); font-family: Manrope, sans-serif; font-size: 54px; font-weight: 800; letter-spacing: -3px; }
 .score-divider { color: #b7b9b0; font-size: 35px; font-weight: 400; }.total-score { color: #85887f; font-size: 33px; font-weight: 600; }
 .score-caption { position: absolute; right: 50%; bottom: -14px; width: 130px; transform: translateX(50%); color: #999b92; font-family: "DM Sans", sans-serif; font-size: 8px; font-weight: 700; letter-spacing: 1.1px; }
 .result-detail { margin: 29px 0 17px; color: #696d64; font-size: 12px; }
-@keyframes twinkle { 50% { transform: rotate(35deg) scale(1.15); } }
 @media (max-width: 700px) {
   .site-header { width: calc(100% - 36px); height: 68px; }.header-note { font-size: 10px; }
   .page-shell { width: calc(100% - 28px); margin-top: 12px; }
