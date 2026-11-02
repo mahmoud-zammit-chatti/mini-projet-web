@@ -8,11 +8,6 @@ Aucune dépendance ou étape de compilation n’est nécessaire. Clonez ou tél�
 
 Pour un développement local, vous pouvez aussi servir le dossier avec n’importe quel serveur statique, par exemple :
 
-```bash
-python -m http.server
-```
-
-Puis ouvrez `http://localhost:8000`.
 
 ## Utilisation
 
