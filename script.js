@@ -383,6 +383,9 @@ const questionBank = [
 
 
 const QUESTIONS_PER_ROUND = 5;
+const QUESTION_TIME_LIMIT = 20;
+const MAX_POINTS_PER_QUESTION = 100;
+const TIME_PENALTY_PER_SECOND = 5;
 let questionDeck = [];
 let deckPosition = 0;
 let roundQuestions = [];
@@ -423,10 +426,16 @@ const progressLabel = document.querySelector("#progress-label");
 const progressPercent = document.querySelector("#progress-percent");
 const progressBar = document.querySelector("#progress-bar");
 const progressFill = document.querySelector("#progress-fill");
+const timerValue = document.querySelector("#timer-value");
+const timerBar = document.querySelector("#timer-bar");
+const timerFill = document.querySelector("#timer-fill");
 
 let currentQuestion = 0;
 let score = 0;
+let correctAnswers = 0;
 let answered = false;
+let secondsRemaining = QUESTION_TIME_LIMIT;
+let timerInterval = null;
 
 function showScreen(screen) {
   welcomeScreen.hidden = screen !== welcomeScreen;
@@ -439,7 +448,36 @@ function updateScore() {
   scorePlural.textContent = score === 1 ? "" : "s";
 }
 
+function stopTimer() {
+  if (timerInterval !== null) {
+    window.clearInterval(timerInterval);
+    timerInterval = null;
+  }
+}
+
+function updateTimerDisplay() {
+  timerValue.textContent = `${secondsRemaining} s`;
+  timerValue.setAttribute("aria-label", `Temps restant : ${secondsRemaining} seconde${secondsRemaining === 1 ? "" : "s"}`);
+  timerBar.setAttribute("aria-valuenow", String(secondsRemaining));
+  timerFill.style.width = `${(secondsRemaining / QUESTION_TIME_LIMIT) * 100}%`;
+  const urgent = secondsRemaining <= 5;
+  timerValue.classList.toggle("is-urgent", urgent);
+  timerFill.classList.toggle("is-urgent", urgent);
+}
+
+function startTimer() {
+  stopTimer();
+  secondsRemaining = QUESTION_TIME_LIMIT;
+  updateTimerDisplay();
+  timerInterval = window.setInterval(() => {
+    secondsRemaining -= 1;
+    updateTimerDisplay();
+    if (secondsRemaining <= 0) handleTimeout();
+  }, 1000);
+}
+
 function renderQuestion() {
+  stopTimer();
   const question = roundQuestions[currentQuestion];
   const questionNumber = currentQuestion + 1;
   answered = false;
@@ -467,11 +505,13 @@ function renderQuestion() {
     answerList.append(button);
   });
   questionTitle.focus();
+  startTimer();
 }
 
 function chooseAnswer(selectedIndex) {
   if (answered) return;
   answered = true;
+  stopTimer();
   const question = roundQuestions[currentQuestion];
   const buttons = answerList.querySelectorAll(".answer-button");
   const isCorrect = selectedIndex === question.correct;
@@ -483,9 +523,11 @@ function chooseAnswer(selectedIndex) {
   });
 
   if (isCorrect) {
-    score += 1;
+    correctAnswers += 1;
+    const pointsEarned = Math.max(0, MAX_POINTS_PER_QUESTION - ((QUESTION_TIME_LIMIT - secondsRemaining) * TIME_PENALTY_PER_SECOND));
+    score += pointsEarned;
     updateScore();
-    feedback.textContent = `Exactement ! ${question.fact}`;
+    feedback.textContent = `Exactement ! +${pointsEarned} points. ${question.fact}`;
     feedback.classList.remove("is-wrong");
   } else {
     feedback.textContent = `Pas tout à fait. La bonne réponse était « ${question.answers[question.correct]} ». ${question.fact}`;
@@ -495,27 +537,53 @@ function chooseAnswer(selectedIndex) {
   nextButton.focus();
 }
 
+function handleTimeout() {
+  if (answered) return;
+  answered = true;
+  stopTimer();
+  const question = roundQuestions[currentQuestion];
+  const buttons = answerList.querySelectorAll(".answer-button");
+  buttons.forEach((button, index) => {
+    button.disabled = true;
+    if (index === question.correct) button.classList.add("correct");
+  });
+  feedback.textContent = `Temps écoulé ! La bonne réponse était « ${question.answers[question.correct]} ». Aucun point marqué. ${question.fact}`;
+  feedback.classList.add("is-wrong");
+  nextButton.hidden = false;
+  nextButton.focus();
+}
+
 function showResults() {
+  stopTimer();
   document.querySelector("#final-score").textContent = String(score);
   const resultMessage = document.querySelector("#result-message");
   const resultDetail = document.querySelector("#result-detail");
-  if (score === roundQuestions.length) {
+  if (correctAnswers === roundQuestions.length) {
     resultMessage.textContent = "Un sans-faute, quelle belle curiosité !";
-    resultDetail.textContent = "Tu as réponse à tout. Impressionnant !";
-  } else if (score >= 3) {
+    resultDetail.textContent = `Tu as réponse à tout et marqué ${score} points. Impressionnant !`;
+  } else if (correctAnswers >= 3) {
     resultMessage.textContent = "Tu as de belles connaissances.";
-    resultDetail.textContent = "Encore quelques questions et tu feras un sans-faute.";
+    resultDetail.textContent = `${correctAnswers} bonnes réponses et ${score} points. Encore quelques questions et tu feras un sans-faute.`;
   } else {
     resultMessage.textContent = "Chaque réponse est une découverte.";
-    resultDetail.textContent = "La curiosité te va bien. Recommence quand tu veux !";
+    resultDetail.textContent = `${correctAnswers} bonne${correctAnswers === 1 ? "" : "s"} réponse${correctAnswers === 1 ? "" : "s"} et ${score} points. La curiosité te va bien !`;
   }
   showScreen(resultScreen);
+  window.dispatchEvent(new CustomEvent("quiz:complete", {
+    detail: {
+      score,
+      correctAnswers,
+      totalQuestions: roundQuestions.length,
+      maxScore: roundQuestions.length * MAX_POINTS_PER_QUESTION
+    }
+  }));
   document.querySelector("#result-title").focus();
 }
 
 function startQuiz() {
   currentQuestion = 0;
   score = 0;
+  correctAnswers = 0;
   roundQuestions = drawRound();
   updateScore();
   showScreen(quizScreen);
@@ -533,3 +601,5 @@ nextButton.addEventListener("click", () => {
     showResults();
   }
 });
+
+window.addEventListener("pagehide", stopTimer);
